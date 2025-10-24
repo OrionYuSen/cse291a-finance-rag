@@ -142,13 +142,20 @@ in september 2015 , the company entered into treasury lock hedges with a total n
 
 ### Evaluator
 
-To quantitatively assess the retrieval quality of our financial RAG system, we design an evaluator that incorporates both classical information retrieval metrics and RAG-specific metrics tailored for the financial domain. Our evaluation focus on **factual accuracy**, **completeness**, and **grounding**.
+To quantitatively assess the performance of our financial RAG system, we adopt the Ragas evaluation framework (Hugging Face, 2024), which enables end-to-end assessment of retrieval-augmented generation systems.
 
-#### **Core Evaluation Metrics**
+Rather than relying solely on ranking-based information retrieval metrics, Ragas evaluates both the retrieval and generation stages in terms of factual consistency and contextual grounding.
 
--   **Hit Rate @ K**: Measures whether at least one relevant document chunk is found within the top K retrieved results. For example, we use `K=3` and `K=5` as primary thresholds, as financial analysts often review multiple evidence pieces.
--   **Mean Reciprocal Rank (MRR)**: $MRR = \frac{1}{|Q|} \sum_{i=1}^{|Q|} \frac{1}{rank_i}$. Evaluates the ranking quality of the retrieved chunks. A higher MRR indicates the system surfaces the most relevant evidence earlier, crucial for analyst efficiency.
--   **Normalized Discounted Cumulative Gain (nDCG) @ K**: Assesses the ranking quality of the retrieved list, giving higher weight to more relevant chunks appearing earlier. This is suitable for queries where multiple chunks collectively form the complete answer.
+Our evaluator measures the following dimensions:
+
+- **Context Precision** — proportion of retrieved chunks that are relevant to the query, assessing retrieval accuracy.
+- **Context Recall** — proportion of relevant chunks successfully retrieved, evaluating coverage of supporting evidence.
+- **Context Relevance** — semantic similarity between retrieved contexts and the query, measuring retrieval quality.
+- **Faithfulness** — degree to which the generated answer is grounded in the retrieved evidence, detecting hallucinations.
+- **Answer Relevance** — semantic alignment between the model’s answer and the reference (golden) answer.
+- **Context Utilization** — extent to which the model effectively leverages retrieved content when generating responses.
+
+These metrics jointly reflect factual accuracy, retrieval quality, and contextual grounding, which are essential in financial reasoning tasks.
 
 ### References
 
